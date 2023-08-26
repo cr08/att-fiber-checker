@@ -10,12 +10,12 @@ def cleanFilename(sourcestring,  removestring ="\`/<>\:\"\\|?*"):
     return ''.join([c for c in sourcestring if c not in removestring])
 
 parser = argparse.ArgumentParser(description='Checks the configured addresses for availability of '
-                                             'ATT Fiber and posts the result to Slack and/or Discord')
+                                             'ATT Fiber and optionally posts the results to Slack and/or Discord')
 
 parser.add_argument('-d', '--debug', action='store_true', dest='debug', help='Enables debug logging to stdout and saves full json response file.',
                     required=False)
 
-parser.add_argument('-n', '--nofiber', required=False, action='store_true', dest='nofiber', help='Send notification to Slack/Discord if no fiber is available.')
+parser.add_argument('-n', '--nofiber', required=False, action='store_true', dest='nofiber', help='Send notification to Slack/Discord if no fiber is available. No messages are posted if no fiber is available by default.')
 
 args = parser.parse_args()
 
@@ -23,9 +23,12 @@ nofiber_notify = args.nofiber
 debug = args.debug
 
 # Load config file for Slack/Discord credentials
-config = {}
-with open("config.json", 'r') as f:
-    config = json.load(f)
+try:
+    with open("config.json", 'r') as f:
+        config = json.load(f)
+except FileNotFoundError:
+    print('File config.json does not exist. Printing results to terminal only.')
+    config = {}
 
 # Load address list json file
 add = {}
@@ -59,6 +62,11 @@ for address in add['addresses']:
         fiber_avail = resp_json['profile']['isGIGAFiberAvailable']
     except:
         print("Unexpected error:", sys.exc_info()[0])
+
+    if fiber_avail:
+        print("\033[1;32mFiber IS available at \033[1;33m" + address['addr_line'] + ", " + address['addr_zip'] + "\033[1;0m")
+    else:
+        print("\033[1;31mFiber is NOT available at \033[1;33m" + address['addr_line'] + ", " + address['addr_zip'] + "\033[1;0m")
 
     if "slack" in config:
         slack = Slacker(config['slack']['slack_key'])
@@ -101,4 +109,5 @@ for address in add['addresses']:
             if debug:
                 print("DEBUG: Fiber not available and 'nofiber' argument not set. Not sending message to Discord.")
     else:
-        print("DEBIUG: Discord webhook url not set in config. Skipping Discord notification pass.")
+        if debug:
+            print("DEBUG: Discord webhook url not set in config. Skipping Discord notification pass.")
