@@ -2,7 +2,7 @@
 
 Simple Python script that fetches the current AT&T Fiber availability for supplied addresses and posts the results to the terminal and optionally Slack and/or Discord.
 
-Credit goes to [craig-rueda](https://github.com/craig-rueda) for the source this was forked from: fiber-checker
+Credit goes to [craig-rueda](https://github.com/craig-rueda) for the source this was forked from: [fiber-checker](https://github.com/craig-rueda/fiber-checker)
 
 ## Usage
 
@@ -13,7 +13,7 @@ Credit goes to [craig-rueda](https://github.com/craig-rueda) for the source this
  source ./venv/bin/activate
 ```
 
-1. Install dependencies (slacker, argparse):
+1. Install dependencies (slacker, argparse, discordwebhook, requests):
 
 ```Bash
  pip install argparse slacker discordwebhook requests
@@ -21,8 +21,8 @@ Credit goes to [craig-rueda](https://github.com/craig-rueda) for the source this
 
 2. Copy and fill out `config.json.example` and `addresses.json.example`
    1. `config.json` contains Discord and Slack credentials. If you do not use one or the other, simply remove the block from the file. If you only intend to use this on the terminal, simply do not provide a `config.json` file.
-      	A Slack API key can be acquired [here](https://api.slack.com/bot-users).
-      	A Discord webhook URL is supplied by going to the settings of a channel on your server and viewing the Integrations tab.
+      * A Slack API key can be acquired [here](https://api.slack.com/bot-users).
+      * A Discord webhook URL is supplied by going to the settings of a channel on your server and viewing the Integrations tab.
    2. `addresses.json` contains addresses to be checked. There is no limit to how many can be included, though a large number could cause ATT to rate limit. I have not tested if they have any limits in place.
 3. Run scraper.py
 
@@ -45,7 +45,7 @@ options:
 
 ## Configuration
 
- Configuration is done through two JSON files. One for the Slack/Discord credentials. The other is for the addresses to be checked.
+ Configuration is done through two JSON files. One for the optional Slack/Discord credentials. The other is for the addresses to be checked.
 
 `config.json`
 
@@ -65,7 +65,7 @@ options:
 
 `addresses.json`
 
-```
+```json
 {
     "addresses": [
         {
