@@ -50,12 +50,14 @@ for address in add['addresses']:
     headers = {'content-type': 'application/json'}
     fiber_avail = False
 
+    print("Checking \033[1;33m" + address['addr_line'] + ", " + address['addr_zip'] + "\033[1;0m...  ", end="", flush=True)
+
     try:
         resp = requests.post(availability_url, data = json.dumps(json_data), headers = headers)
         if debug:
             today = datetime.now()
             iso_date = today.isoformat()
-            print("DEBIG: Writing json response file - " + cleanFilename(iso_date) + ".json")
+            print("DEBUG: Writing json response file - " + cleanFilename(iso_date) + ".json")
             with open(cleanFilename(iso_date) + ".json", "w") as f:
                 f.write(resp.text)
         resp_json = json.loads(resp.text)
@@ -64,9 +66,9 @@ for address in add['addresses']:
         print("Unexpected error:", sys.exc_info()[0])
 
     if fiber_avail:
-        print("\033[1;32mFiber IS available at \033[1;33m" + address['addr_line'] + ", " + address['addr_zip'] + "\033[1;0m")
+        print("\033[1;32mFiber IS available!\033[1;0m")
     else:
-        print("\033[1;31mFiber is NOT available at \033[1;33m" + address['addr_line'] + ", " + address['addr_zip'] + "\033[1;0m")
+        print("\033[1;31mFiber is NOT available.\033[1;0m")
 
     if "slack" in config:
         slack = Slacker(config['slack']['slack_key'])
