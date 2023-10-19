@@ -1,5 +1,7 @@
 # ATT Fiber Availability Checker
 
+## !!Repo archived - continued under https://github.com/cr08/ATT-Fiber-Availability-Tools
+
 Simple Python script that fetches the current AT&T Fiber availability for supplied addresses and posts the results to the terminal and optionally Slack and/or Discord.
 
 Credit goes to [craig-rueda](https://github.com/craig-rueda) for the source this was forked from: [fiber-checker](https://github.com/craig-rueda/fiber-checker)
